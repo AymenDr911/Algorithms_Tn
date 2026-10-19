@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light" style="color-scheme:light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Algorithmique : tableaux et modules – 3 Scientifique</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1c2340;--mut:#68708f;--pri:#6d28d9;--pri2:#db2777;--ok:#16a34a;--warn:#f59e0b;--bd:#e3e7f3;--code:#0f172a;--codei:#e2e8f0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1222;--card:#171c33;--ink:#e8ebf8;--mut:#9aa3c7;--bd:#2a3150;--code:#0a0e1c}}
+:root[data-theme="dark"]{--bg:#0e1222;--card:#171c33;--ink:#e8ebf8;--mut:#9aa3c7;--bd:#2a3150;--code:#0a0e1c}
+*{box-sizing:border-box}html{scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--bd);box-shadow:0 4px 18px #0001;padding:10px 16px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:1000px;margin:auto}
+.top input{flex:1 1 150px;padding:9px 11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.chrono{display:flex;gap:6px;align-items:center;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-radius:12px;padding:6px 10px}
+.chrono b{font:700 20px ui-monospace,Consolas,monospace;letter-spacing:1px;min-width:86px;text-align:center}
+.chrono button{background:#fff3;color:#fff;border:0;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:15px}
+.prog{max-width:1000px;margin:8px auto 0;height:7px;background:var(--bd);border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri),var(--ok));transition:width .4s}
+.hero{background:linear-gradient(135deg,#4f46e5,#06b6d4);color:#fff;padding:30px 16px}
+.hero .row{justify-content:space-between;flex-wrap:wrap}.hero h1{margin:0 0 6px;font-size:clamp(24px,5vw,38px)}.hero p{margin:4px 0;opacity:.95}
+.tag{display:inline-block;background:#fff3;border-radius:20px;padding:3px 12px;font-size:13px;margin-right:6px}
+.hero svg{width:240px;max-width:100%}
+main{max-width:1000px;margin:20px auto;padding:0 14px 60px}
+.ex{background:var(--card);border:1px solid var(--bd);border-radius:18px;margin:0 0 24px;box-shadow:0 6px 24px #0000000d;overflow:hidden}
+.ex>h2{margin:0;padding:14px 18px;font-size:19px;display:flex;gap:10px;align-items:center;background:linear-gradient(90deg,#4f46e51a,#06b6d41a)}
+.num{background:var(--pri);color:#fff;border-radius:10px;padding:2px 11px}.st{margin-left:auto;font-size:13px;color:var(--warn)}.st.ok{color:var(--ok)}
+.bd{padding:16px 18px}.q{font-size:16px}.nb{background:#f59e0b1f;border-left:4px solid var(--warn);padding:8px 12px;border-radius:8px;margin:10px 0;font-size:14px}
+.viz{background:var(--bg);border:1px dashed var(--bd);border-radius:14px;padding:12px;margin:12px 0}.viz small{color:var(--mut);display:block;margin:6px 0 3px;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.6px}
+.arr{display:flex;flex-wrap:wrap;gap:0}.arr span{border:1.5px solid var(--pri);min-width:38px;text-align:center;background:var(--card);margin-right:-1.5px}.arr b{display:block;padding:3px 6px}.arr i{display:block;font-size:10px;color:var(--mut);border-top:1px solid var(--bd);font-style:normal}
+.arr .g{background:#16a34a22}.arr .r{background:#f59e0b2a}.arr .p{background:#4f46e522}
+.bars{display:flex;align-items:flex-end;gap:10px;height:110px}.bars div{flex:1;max-width:46px;background:linear-gradient(var(--pri2),var(--pri));border-radius:6px 6px 0 0;position:relative;text-align:center;color:#fff;font-size:12px}.bars em{position:absolute;bottom:-20px;left:0;right:0;color:var(--mut);font-style:normal}
+h3{font-size:14px;margin:16px 0 6px;color:var(--pri)}
+table.o{border-collapse:collapse;width:100%;max-width:560px}.o th{background:var(--pri);color:#fff;padding:6px;text-align:left;font-size:13px}.o td{border:1px solid var(--bd);padding:2px}.o input{width:100%;border:0;background:transparent;color:var(--ink);padding:6px;font:inherit}.o .x{width:34px;text-align:center;cursor:pointer;color:var(--mut)}
+.ed{display:flex;background:var(--code);border-radius:12px;overflow:hidden;border:1px solid var(--bd)}
+.gut{margin:0;padding:10px 8px;color:#64748b;font:13px/20px ui-monospace,Consolas,monospace;text-align:right;overflow:hidden;background:#0003;user-select:none;min-width:58px;height:240px}
+.ed textarea{flex:1;height:240px;border:0;outline:0;resize:vertical;background:transparent;color:var(--codei);font:13px/20px ui-monospace,Consolas,monospace;padding:10px;white-space:pre;overflow:auto;tab-size:2}
+.py{height:150px!important}.py+*{}
+.bar{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);padding:4px 2px;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:9px 16px;cursor:pointer;font:600 14px inherit;color:#fff;background:var(--pri)}.btn.s{background:var(--ok)}.btn.g{background:var(--bd);color:var(--ink)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.fin{background:var(--card);border:2px solid var(--pri);border-radius:18px;padding:20px}
+pre.rep{background:var(--code);color:var(--codei);padding:14px;border-radius:12px;overflow:auto;max-height:340px;font-size:12.5px;white-space:pre-wrap}
+.card{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}.kpi{flex:1 1 130px;background:var(--bg);border-radius:12px;padding:10px;text-align:center}.kpi b{display:block;font-size:22px;color:var(--pri)}
+.off{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--card);border:1px solid var(--bd);border-top:5px solid #e70013;border-radius:14px;padding:14px 18px;font-size:14px;line-height:1.6;margin-bottom:20px}.off b{color:var(--pri)}.off div:last-child{text-align:right}#login{max-width:560px;margin:30px auto;padding:0 14px}#login .box{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;box-shadow:0 10px 30px #0000001a}#login h1{font-size:24px;margin:0 0 6px;color:var(--pri)}#login input{width:100%;padding:11px;margin:6px 0 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}#login label{font-weight:600;font-size:13px}body:not(.in) .top,body:not(.in) .hero,body:not(.in) #m{display:none}body.in #login{display:none}.gut .l0{color:#94a3b8}.gut .l1{color:#38bdf8}.gut .l2{color:#a3e635}.gut .l3{color:#fbbf24}.gut .l4{color:#f472b6}.gut .l5{color:#c084fc}.gut .bad{color:#f87171;font-weight:700}.ed textarea{background-image:repeating-linear-gradient(90deg,transparent 0,transparent calc(4ch - 1px),#ffffff1c calc(4ch - 1px),#ffffff1c 4ch);background-attachment:local;background-origin:content-box;background-clip:content-box}.ckb{font-size:13px;margin:4px 0}.ckb.e{color:#dc2626}.ckb.k{color:var(--ok)}.bar a{color:var(--pri);cursor:pointer;text-decoration:none;font-weight:600}.bar label{cursor:pointer}.con{background:#020617;color:#e2e8f0;border-radius:10px;padding:10px;min-height:90px;max-height:260px;overflow:auto;font:13px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;margin:8px 0 0}.con .er{color:#f87171}.con .ok{color:#34d399}.con .ht{color:#fbbf24}.con .us{color:#38bdf8}.con .pr{color:#cbd5e1}.cin{display:flex;gap:6px;margin-top:6px}.cin[hidden]{display:none}.ed.pw{position:relative}.hlp{position:absolute;top:0;left:0;right:0;bottom:0;margin:0;padding:10px;font:13px/20px ui-monospace,Consolas,monospace;white-space:pre;overflow:hidden;pointer-events:none;color:#e2e8f0}.ed.pw textarea{position:relative;z-index:1;color:transparent;caret-color:#e2e8f0}.hlp .k{color:#f472b6;font-weight:600}.hlp .b{color:#38bdf8}.hlp .s{color:#a3e635}.hlp .c{color:#64748b;font-style:italic}.hlp .n{color:#fbbf24}.cin input{flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font:13px ui-monospace,Consolas,monospace}
+
+body{background:linear-gradient(160deg,#e0e7ff 0%,#fce7f3 38%,#fef9c3 70%,#d1fae5 100%) fixed;min-height:100vh}
+.hero{background:linear-gradient(120deg,#7c3aed,#ec4899 58%,#fbbf24)}
+.chrono{background:linear-gradient(135deg,#6d28d9,#db2777)}
+.prog i{background:linear-gradient(90deg,#f59e0b,#16a34a)}
+.ex{border-radius:22px;border:2px solid var(--bd);transition:box-shadow .2s}.ex:hover{box-shadow:0 12px 34px #6d28d926}
+.ex>h2{background:linear-gradient(90deg,#6d28d91f,#f59e0b1f);font-size:20px}
+.num{background:linear-gradient(135deg,var(--pri),#db2777);border-radius:50%;width:36px;height:36px;display:grid;place-items:center;padding:0}
+.btn{border-radius:12px;box-shadow:0 3px 0 #0002}.btn:active{transform:translateY(2px);box-shadow:none}
+h3{border-left:4px solid #f59e0b;padding-left:8px}
+.off{border-top-color:#db2777}
+.run{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:10px 14px;font:13px/1.7 ui-monospace,Consolas,monospace;margin:6px 0}.run u{color:#fbbf24;text-decoration:none;font-weight:700}.run b{color:#34d399}
+.tt{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}.tt th{background:#6d28d91f;text-align:left;padding:6px 8px}.tt td{border-bottom:1px solid var(--bd);padding:6px 8px}
+.nb.sc{background:#6d28d91a;border-left-color:var(--pri)}
+.plane{width:100%;max-width:360px;display:block;margin:4px 0}
+.hero .tag{background:#ffffff33}
+
+.fm{background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #c4b5fd;border-radius:14px;padding:12px 16px;margin:10px 0}.fm h4{margin:0 0 6px;color:var(--pri);font-size:15px}
+.eq{font:italic 19px/2.1 Georgia,"Times New Roman",serif;color:#1c2340}.eq sub{font-size:.65em}
+.sq{display:inline-flex;align-items:flex-start;vertical-align:middle}.sq i{font-style:normal;font-size:1.7em;line-height:1;margin-right:1px}.sq>span{border-top:2px solid currentColor;padding:0 5px;margin-top:4px;line-height:1.55}
+.wr{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px;margin:8px 0}
+.cd{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:8px 12px;font:12.5px/1.7 ui-monospace,Consolas,monospace;white-space:pre-wrap}.cd small{display:block;color:#a5b4fc;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin:0 0 2px}
+.hint{font-size:13px;color:#4c1d95;margin:4px 0 0}
+.cps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cpn{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:8px;text-align:center;font-size:13px;color:#1c2340}.cpn svg{width:100%;height:auto;display:block}.cpn code{background:#ede9fe;padding:1px 6px;border-radius:6px;font-size:12px}
+.cpn text{paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+
+.off{display:grid;grid-template-columns:1.1fr 1fr;background:#fff;border:1px solid #d6d9e8;border-top:4px solid #e70013;border-radius:12px;padding:0;overflow:hidden;font-size:14px;margin-bottom:20px;box-shadow:0 4px 14px #1c234012;line-height:1.45}
+.off>div.o-l{padding:14px 20px;display:flex;flex-direction:column;gap:2px;text-align:left}
+.off>div.o-l b{font:700 15px Georgia,"Times New Roman",serif;letter-spacing:1px;text-transform:uppercase;color:#1c2340}
+.off>div.o-l span{color:#475069}
+.off>div.o-r{padding:14px 20px;border-left:1px solid #e3e7f3;background:#f8f9fe;display:grid;grid-template-columns:auto 1fr;gap:3px 16px;text-align:left;align-content:center}
+.off>div.o-r em{font-style:normal;color:#68708f}.off>div.o-r b{color:#1c2340}
+@media(max-width:560px){.off{grid-template-columns:1fr}.off>div.o-r{border-left:0;border-top:1px solid #e3e7f3}}
+.btn{border-radius:8px;box-shadow:none;font-weight:600;letter-spacing:.2px;padding:9px 18px}.btn:active{transform:none;opacity:.9}
+.chrono button{font-size:12px;font-weight:600}.chrono span{font-size:12px;opacity:.9}
+.o .x{width:64px;font-size:12px}
+.hero{padding:24px 16px}
+
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px;margin:8px 0;max-width:640px}
+.nums div{border:1px solid var(--bd);border-radius:8px;background:#fff;text-align:center;padding:4px 0;font-weight:700;line-height:1.25;color:#1c2340}
+.nums div i{display:block;font-style:normal;font-size:12px;min-height:15px;color:#7c3aed}
+.nums .m{background:#fde7f1;border-color:#db2777}.nums .c{background:#e0f2fe;border-color:#0ea5e9}.nums .b{background:linear-gradient(135deg,#fde7f1 50%,#e0f2fe 50%);border-color:#7c3aed}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin:6px 0;color:#1c2340}.leg span:before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid #0003;background:var(--c)}
+.syr{display:flex;flex-wrap:wrap;gap:10px 0;margin:8px 0;align-items:flex-start}
+.syr>div{min-width:62px;text-align:center;position:relative;padding:0 7px}
+.syr>div em{display:block;font-style:normal;font-size:10px;color:#7c3aed;font-weight:700;margin-bottom:2px}
+.syr>div b{display:block;border:1px solid #7c3aed;border-radius:8px;background:#fff;padding:5px 0;font-size:16px;color:#1c2340}
+.syr>div i{display:block;font-style:normal;font-size:11px;color:var(--mut);margin-top:3px;line-height:1.25}
+.syr>div+div:before{content:"";position:absolute;left:-7px;top:29px;width:14px;border-top:2px solid #7c3aed}
+.strp{display:flex;flex-wrap:wrap;font:15px ui-monospace,Consolas,monospace;margin:8px 0}
+.strp span{display:inline-block;width:24px;text-align:center;border:1px solid var(--bd);background:#fff;margin:0 -1px -1px 0;line-height:24px;color:#1c2340;height:38px;box-sizing:border-box}
+.strp span i{display:block;font-style:normal;font-size:9px;line-height:11px;color:var(--mut)}
+.strp .k{background:#dcfce7;border-color:#16a34a}.strp .d{background:#fee2e2;border-color:#dc2626}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 0;margin:14px 0 4px;border-bottom:2px solid var(--bd);-webkit-overflow-scrolling:touch}
+.tabs button{flex:0 0 auto;border:1px solid var(--bd);border-bottom:0;background:#fff;border-radius:8px 8px 0 0;padding:9px 14px;font:600 13px system-ui,sans-serif;color:#1c2340;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:linear-gradient(135deg,var(--pri),#db2777);color:#fff;border-color:transparent}.tabs button.add{border-style:dashed;color:var(--pri)}
+.ed.aw{position:relative}.ed.aw textarea{position:relative;z-index:1;color:transparent;caret-color:#e2e8f0}
+.hla{position:absolute;top:0;left:58px;right:0;bottom:0;margin:0;padding:10px;font:13px/20px ui-monospace,Consolas,monospace;white-space:pre;overflow:hidden;pointer-events:none;color:var(--codei)}
+.hla .rf{color:#ff4d4d;font-weight:800}
+.ed.pw .gut{height:auto}.ed.pw.gn .hlp{left:58px}
+.hint2{font-size:13px;color:var(--mut);margin:4px 0 10px}.ws[hidden]{display:none}
+
+.pcw{margin:8px 0 14px}.pc{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.pc div{width:92px;border-radius:12px;border:2px solid #cbd5e1;background:#fff;text-align:center;padding:6px 4px;color:#1c2340}
+.pc b{display:block;font-size:26px;line-height:1.2}.pc small{display:block;font-size:11px;color:var(--mut);line-height:1.35}
+.pc .ok{border-color:#16a34a;background:#f0fdf4}.pc .ko{border-color:#dc2626;background:#fef2f2}
+.vd{display:inline-block;border-radius:999px;padding:4px 14px;font-weight:700;font-size:13px}.vd.ok{background:#dcfce7;color:#166534}.vd.ko{background:#fee2e2;color:#991b1b}
+.arr{display:flex;flex-wrap:wrap;margin:6px 0}.arr div{min-width:58px;border:2px solid #7c3aed;border-right-width:0;text-align:center;background:#fff;padding:5px 8px;font-weight:700;color:#1c2340}
+.arr div:last-child{border-right-width:2px;border-radius:0 8px 8px 0}.arr div:first-child{border-radius:8px 0 0 8px}
+.arr div i{display:block;font:600 10px system-ui,sans-serif;color:var(--mut);font-style:normal;margin-top:2px}
+.arrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.arrl>b{font-size:18px;color:#7c3aed;min-width:18px}
+.tl{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.tl span{width:36px;text-align:center;border-radius:8px;border:2px solid #cbd5e1;background:#fff;font:700 17px ui-monospace,Consolas,monospace;color:#1c2340;padding:3px 0}
+.tl span i{display:block;font:600 10px system-ui,sans-serif;color:var(--mut);font-style:normal}
+.tl .v{border-color:#db2777;background:#fde7f1}.tl .c{border-color:#0ea5e9;background:#e0f2fe}
+.wt{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}
+</style>
+<script src='https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js'></script><script src='https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'></script></head><body>
+<div id='login'><div id='oh'></div><div class='box'><h1>Évaluation : tableaux et modules</h1><p style='color:var(--mut);margin:0 0 14px'>Série d’exercices Algo &amp; Python. Identifie-toi pour commencer ; le chronomètre démarre dès ta première saisie.</p><label>Nom et prénom</label><input id='ln' autocomplete='name'><label>Email</label><input id='le' type='email' autocomplete='email'><label>WhatsApp</label><input id='lw' type='tel' placeholder='+216 …'><p id='lerr' style='color:#dc2626;margin:0 0 10px'></p><button class='btn' id='lb' style='width:100%'>Commencer</button></div></div>
+<div class="top"><div class="row">
+<input id="pn" placeholder="Nom et prénom" autocomplete="name"><input id="pe" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="tel" placeholder="WhatsApp (+216…)">
+<div class="chrono"><span>Durée</span><b id="cr">00:00:00</b><button id="c1" title="Démarrer / Pause">Démarrer</button><button id="c2" title="Remise à zéro">Remise à zéro</button></div></div>
+<div class="prog"><i id="pg"></i></div></div>
+<main id="m"></main>
+<script>
+const $=s=>document.querySelector(s),ID=[1,2];
+const OFF=`<div class='off'><div class='o-l'><b>République Tunisienne</b><span>Ministère de l’Éducation</span><span>Lycée Hannibal – Ariana</span></div><div class='o-r'><em>Année scolaire</em><b>2026 – 2027</b><em>Email</em><b>aymen.a@hotmail.com</b><em>Niveau</em><b>3 Scientifique</b></div></div>`;
+let S={p:{n:'',e:'',w:''},t:0,lg:0,ex:{}};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('mod3')||'{}'))}catch(e){}
+const sv=()=>{try{localStorage.setItem('mod3',JSON.stringify(S))}catch(e){}};
+const L2=(l,v,c=[])=>`<div class='arr'>${v.map((x,i)=>`<span class='${c[i]||''}'><b>${x}</b><i>${l[i]}</i></span>`).join('')}</div>`;
+const C=(a,c=[])=>`<div class="arr">${a.map((v,i)=>`<span class="${c[i]||''}"><b>${v}</b><i>${i}</i></span>`).join('')}</div>`;
+const EXT1=(()=>{const T=[18,19.5,22.5,22,25.5,24],N=T.length,M=T.reduce((a,b)=>a+b,0)/N,D=T.map(t=>Math.abs(t-M)),im=D.indexOf(Math.min(...D)),hs=T.map((t,i)=>i>0&&t>T[i-1]+2.5),f=x=>x.toFixed(2).replace('.',',');
+return `<small>Dessin d'un exemple (N = ${N} heures)</small><div class="arrl"><b>T</b><div class="arr">${T.map((t,i)=>`<div style="${hs[i]?'background:#fef2f2;border-color:#dc2626':''}">${f(t)}<i>${i}</i></div>`).join('')}</div></div><div class="eq" style="font-size:16px;line-height:1.6">M = (${T.map(t=>String(t).replace('.',',')).join(' + ')}) / ${N} = ${f(M)} °C</div><div class="arrl"><b>Diff</b><div class="arr">${D.map((d,i)=>`<div style="${i==im?'background:#f0fdf4;border-color:#16a34a':''}">${f(d)}<i>${i}</i></div>`).join('')}</div></div><div class="leg"><span style="--c:#f0fdf4">écart minimal</span><span style="--c:#fef2f2">hausse critique (plus de 2,5 °C)</span></div><div class="eq" style="font-size:16px;line-height:1.6">Heure la plus stable : ${im} (écart ${f(D[im])})<br>Hausses critiques : ${hs.filter(Boolean).length} (heures ${hs.map((h,i)=>h?i:-1).filter(i=>i>=0).join(' et ')})</div>`})();
+const EXT2=(()=>{const U=['www.education.tn','www.google.com','www.hannibal.edu.tn','www.A1.tn','www.io.tn'],ex=u=>{const rest=u.slice(4),k=rest.indexOf('.'),dom=rest.slice(0,k),bad=[...dom].some(c=>!((c>='a'&&c<='z')||c=='-')),sh=dom.length<3,rs=[];if(sh)rs.push('trop court (moins de 3 caractères)');if(bad)rs.push('caractère interdit');return{u,dom,ok:!bad&&!sh,rs}},R=U.map(ex),nv=R.filter(r=>r.ok).length,sy=(ok)=>`width:auto;padding:3px 8px;border-color:${ok?'#16a34a':'#dc2626'};background:${ok?'#dcfce7':'#fee2e2'}`;
+return `<small>Dessin d'un exemple : extraction et validité du domaine (N = ${R.length})</small>${R.map(r=>`<div class="wt"><div class="tl"><span style="width:auto;padding:3px 6px;color:#68708f">www.</span><span style="${sy(r.ok)}">${r.dom}</span><span style="width:auto;padding:3px 6px;color:#68708f">${r.u.slice(4+r.dom.length)}</span></div><span class="vd ${r.ok?'ok':'ko'}">${r.ok?'domaine valide':r.rs.join(' et ')}</span></div>`).join('')}<div class="eq" style="font-size:16px;line-height:1.6">Pourcentage de domaines valides : ${nv} / ${R.length} = ${nv*100/R.length} %<br>Domaines valides affichés : ${R.filter(r=>r.ok).map(r=>r.dom).join(', ')}</div>`})();
+const E=[
+{q:`<b>EXERCICE 1 : Analyse des Variations d'un Tableau de Réels (Contextualisé)</b><p><b>Contexte :</b><br>Dans un centre de recherche météorologique, on enregistre durant N heures consécutives (5≤N≤24) la température (en degrés Celsius, représentée par un nombre réel) au sein d'une serre automatisée. Ces relevés sont stockés dans un tableau T de réels.<br>On souhaite analyser le profil thermique en réalisant les opérations suivantes :</p>1. Calculer la moyenne globale des températures M.<br>2. Remplir un deuxième tableau Diff de N réels où chaque élément Diff[i] contient l'écart absolu de la température par rapport à la moyenne (Diff[i]=|T[i]−M|).<br>3. Déterminer l'heure (l'indice i) à laquelle la température a été la plus stable (écart minimal par rapport à la moyenne).<br>4. Compter et afficher le nombre d'heures où la température subit une hausse critique (une augmentation de plus de 2.5 °C par rapport à l'heure précédente T[i]&gt;T[i−1]+2.5).<p><b>Travail Demandé :</b><br>1. Écrire l'algorithme du programme principal en le décomposant en modules indépendants, et dresser le TDNT ainsi que le TDOG.<br>2. Écrire les algorithmes de l'ensemble des modules envisagés (Saisie, Traitements, Affichages) avec leurs TDOL correspondants.</p>`,v:EXT1},
+{q:`<b>EXERCICE 2 : Gestion de Noms de Domaine &amp; Analyse de Chaînes (Contextualisé)</b><p><b>Contexte :</b><br>Une entreprise de services numériques (ESN) gère une liste de N adresses web (noms de domaine ou URLs) saisies dans un tableau <code>TabURL</code> (3≤N≤30). Chaque chaîne du tableau est sous la forme : <code>"www.nom-du-site.extension"</code> (Exemples : <code>"www.education.tn"</code>, <code>"www.google.com"</code>, <code>"www.hannibal.edu.tn"</code>).<br>L'entreprise souhaite effectuer un audit de la base de données selon les règles suivantes :</p>1. <b>Saisie du Tableau :</b> Saisir N, puis remplir le tableau <code>TabURL</code> en vérifiant que chaque chaîne commence impérativement par <code>"www."</code> et contient au moins un point <code>"."</code> après le prefixe.<br>2. <b>Extraction du Domaine principal :</b> Générer un deuxième tableau <code>TabDomaine</code> de N chaines, contenant uniquement le nom du site (la partie située strictement entre <code>"www."</code> et le point suivant).<br>&nbsp;&nbsp;&nbsp;* Exemple : Pour <code>"www.education.tn"</code>, le domaine extrait est <code>"education"</code>.<br>3. <b>Analyse de Qualité :</b> Une adresse est considérée comme "Domaine Valide" si le nom extrait ne contient que des lettres alphabétiques minuscules ou des tirets <code>"-"</code>, et que sa longueur est supérieure ou égale à 3 caractères.<br>4. <b>Statistiques :</b> Calculer et afficher le pourcentage des adresses valides dans le tableau, ainsi que la liste des domaines extraits valides.<p><b>Travail Demandé :</b><br>1. Écrire l'algorithme du programme principal décomposé en modules (Saisie, Extraction, Validation/Affichage), accompagné de son TDNT et de son TDOG.<br>2. Écrire l'algorithme détaillé de chaque module ainsi que les TDOL associés.</p>`,v:EXT2}];
+const TY=['Entier','Réel','Booléen','Caractère','Chaîne de caractères','Tableau','Fonction','Procédure','Constante'];
+const X=id=>{const x=S.ex[id]||(S.ex[id]={a:'',p:'',o:[['','']],nt:[''],s:0});if(!x.nt)x.nt=[''];return x};
+$('#m').innerHTML=OFF+ID.map(i=>`<section class="ex" id="e${i}"><h2><span class="num">${i}</span>Exercice ${i}<span class="st" id="st${i}"></span></h2><div class="bd">
+<div class="q">${E[i-1].q}</div><div class="viz">${E[i-1].v}</div>
+<div class="tabs" id="tb${i}"></div><p class="hint2">Programme principal : T.D.N.T., T.D.O. globales, algorithme et Python. Chaque module (fonction ou procédure) a son propre espace avec ses T.D.O. locales ; le Python reste dans l’espace principal. Une T.D.O. peut aussi déclarer un module (Type / Nature : Fonction ou Procédure).</p><div class="ws" id="w${i}">
+<h3>T.D.N.T. – Tableau de déclaration des nouveaux types (si besoin)</h3><table class='o' id='n${i}' style='max-width:300px'><thead><tr><th>Type</th><th></th></tr></thead><tbody></tbody></table><div class='acts'><button class='btn g' data-addt='${i}'>Ajouter un type</button></div><h3>T.D.O. globales – Tableau de déclaration des objets</h3><table class="o" id="o${i}"><thead><tr><th>Objet (O)</th><th>Type / Nature (T/N)</th><th></th></tr></thead><tbody></tbody></table><div class="acts"><button class="btn g" data-add="${i}">Ajouter un objet</button></div>
+<h3>Algorithme du programme principal (Entrée = indentation automatique · Tab / Shift+Tab = +1 / −1 niveau)</h3>
+<div class="ed aw"><pre class="gut" id="g${i}"></pre><pre class="hla" id="ha${i}" aria-hidden="true"></pre><textarea id="a${i}" spellcheck="false" wrap="off" placeholder="ALGORITHME Nom&#10;DÉBUT&#10;    ...&#10;FIN"></textarea></div>
+<div class="bar"><span id="lv${i}">Ligne 1 · Niveau d’indentation : 0</span><span><a href='#' data-sk='${i}'>Squelette</a> · <a href='#' data-ck='${i}'>Vérifier</a> · <a href='#' data-ca='${i}'>Compiler tous les espaces</a> · <a href='#' data-fx='${i}'>Réindenter</a> · <label><input type='checkbox' class='au' checked> Aide auto</label></span><div class='ckb' id='ck${i}' style='flex-basis:100%'></div></div>
+<h3>Implémentation Python <small style='font-weight:400;color:var(--mut)'>— un seul espace pour le programme principal et tous les modules · numpy autorisé : from numpy import * · T = array([int()]*n)</small></h3><div class="ed pw gn"><pre class="gut" id="gp${i}"></pre><pre class='hlp' id='hp${i}' aria-hidden='true'></pre><textarea class="py" id="p${i}" spellcheck="false" wrap="off" placeholder="from numpy import *&#10;&#10;# écris ton code ici"></textarea></div><div class='acts'><button class='btn s' data-run='${i}'>Exécuter</button><button class='btn g' data-stop='${i}'>Arrêter</button><button class='btn g' data-mod='${i}'>Modèle Python</button><button class='btn g' data-clr='${i}'>Effacer</button></div><pre class='con' id='co${i}'>Console Python — écris ton code puis clique sur Exécuter.</pre><div class='cin' id='ci${i}' hidden><input id='cx${i}' placeholder='Saisie demandée par input() — Entrée pour valider'><button class='btn' data-send='${i}'>Valider</button></div><div id='va${i}'></div></div><div id="wm${i}"></div>
+<div class="acts"><button class="btn s" data-save="${i}">Enregistrer</button><button class="btn" data-copy="${i}">Copier</button></div></div></section>`).join('')+
+`<section class="fin"><h2>Évaluation finale</h2><p id="fm">Enregistre les 2 exercices pour activer l’envoi.</p><label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px"><input type="checkbox" id="auto" checked> Informer automatiquement mon enseignant (message + dépôt du rapport) dès que je génère le rapport</label><p id="shst" style="font-size:13px;margin:4px 0"></p><div class="acts"><button class="btn" id="mk" disabled>Générer le rapport</button></div><div id="rp" hidden><div class="card" id="kp"></div><pre class="rep" id="rt"></pre>
+<div class="acts"><button class="btn s" id="sd">Envoyer à l’enseignant</button><button class="btn" id="inf">Informer l’enseignant</button><button class="btn g" id="cp">Copier le rapport</button><button class="btn g" id="dl">Télécharger .txt</button></div><p style="font-size:13px;color:var(--mut)">Ton application mail s’ouvre avec le message prérempli : appuie sur « Envoyer ». Le rapport complet est copié : colle-le dans le mail.</p></div></section>`;
+const IN=4,nz=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase(),lvl=l=>Math.floor(l.match(/^ */)[0].length/IN);let AUTO=true;
+function gut(i){const t=$('#a'+i).value.split('\n');$('#g'+i).textContent=t.map((l,k)=>`${k+1} ${lvl(l)}`).join('\n')}
+function rowsT(i){$('#n'+i+' tbody').innerHTML=X(i).nt.map((r,k)=>`<tr><td><input data-t='${i},${k}' value='${r.replace(/'/g,'&#39;')}' placeholder='ex : aucun nouveau type nécessaire'></td><td class='x' data-delt='${i},${k}'>Suppr.</td></tr>`).join('')}
+function rows(i){const b=$('#o'+i+' tbody');b.innerHTML=X(i).o.map((r,k)=>`<tr><td><input data-r="${i},${k},0" value="${r[0].replace(/"/g,'&quot;')}" placeholder="ex : xM"></td><td><input data-r="${i},${k},1" list="ty" value="${r[1].replace(/"/g,'&quot;')}" placeholder="ex : Réel"></td><td class="x" data-del="${i},${k}">Suppr.</td></tr>`).join('')}
+function stat(i){const s=X(i).s;$('#st'+i).textContent=s?'Enregistré':'Non enregistré';$('#st'+i).className='st'+(s?' ok':'');const n=ID.filter(k=>X(k).s).length;$('#pg').style.width=n*50+'%';$('#mk').disabled=n<2;$('#fm').textContent=n<2?`${n}/2 exercices enregistrés. Enregistre-les tous pour activer l’envoi.`:'Bravo ! Tu peux générer ton rapport.'}
+document.body.insertAdjacentHTML('beforeend','<datalist id="ty">'+TY.map(t=>`<option>${t}</option>`).join('')+'</datalist>');
+ID.forEach(i=>{(X(i).mods||[]).forEach(id=>mkMod(i,id));$('#a'+i).value=X(i).a;$('#p'+i).value=X(i).p;rows(i);rowsT(i);gut(i);stat(i);tabs(i)});
+['n','e','w'].forEach(k=>{const el=$('#p'+k);el.value=S.p[k];el.oninput=()=>{S.p[k]=el.value;sv()}});
+$('#oh').innerHTML=OFF;
+const lp={n:$('#ln'),e:$('#le'),w:$('#lw')};
+Object.keys(lp).forEach(k=>lp[k].value=S.p[k]||'');
+const enter=()=>document.body.classList.add('in');
+if(S.lg)enter();
+$('#lb').onclick=()=>{const p={n:lp.n.value.trim(),e:lp.e.value.trim(),w:lp.w.value.trim()};
+if(!p.n||!/^\S+@\S+\.\S+$/.test(p.e)||p.w.replace(/\D/g,'').length<8){$('#lerr').textContent='Renseigne ton nom complet, un email valide et ton numéro WhatsApp.';return}
+$('#lerr').textContent='';S.p=p;S.lg=1;['n','e','w'].forEach(k=>$('#p'+k).value=p[k]);sv();enter();scrollTo(0,0)};
+// chrono
+let tm=null;const fmt=t=>[t/3600|0,t/60%60|0,t%60].map(x=>String(x).padStart(2,'0')).join(':');
+const draw=()=>$('#cr').textContent=fmt(S.t);draw();
+function go(){if(tm)return;tm=setInterval(()=>{S.t++;draw();if(S.t%5==0)sv()},1000);$('#c1').textContent='Pause'}
+function stop(){clearInterval(tm);tm=null;$('#c1').textContent='Démarrer';sv()}
+$('#c1').onclick=()=>tm?stop():go();$('#c2').onclick=()=>{{stop();S.t=0;draw();sv()}};
+// events
+const m=$('#m');
+m.addEventListener('input',e=>{const t=e.target,id=t.id||'';if(t.dataset.r){const[i,k,c]=t.dataset.r.split(',');X(+i).o[k][c]=t.value;X(P0(+i)).s=0;stat(P0(+i))}
+else if(t.dataset.t){const[i,k]=t.dataset.t.split(',');X(+i).nt[k]=t.value;X(+i).s=0;stat(+i)}
+else if(/^[ap]\d+$/.test(id)){const i=+id.slice(1);if(id[0]=='a'&&AUTO)fixLine(t);const x=X(i);x[id[0]]=t.value;X(P0(i)).s=0;stat(P0(i));if(id[0]=='a')gut(i);if(i>9)tabs(P0(i));go()}sv()});
+m.addEventListener('keydown',e=>{const t=e.target;if(!/^[ap]\d+$/.test(t.id||''))return;const v=t.value,s=t.selectionStart,en=t.selectionEnd;
+if(e.key=='Tab'){e.preventDefault();if(e.shiftKey){const ls=v.lastIndexOf('\n',s-1)+1,m2=v.slice(ls).match(/^ {1,2}/);if(m2){t.value=v.slice(0,ls)+v.slice(ls+m2[0].length);t.selectionStart=t.selectionEnd=Math.max(ls,s-m2[0].length)}}else{t.value=v.slice(0,s)+'  '+v.slice(en);t.selectionStart=t.selectionEnd=s+2}t.dispatchEvent(new Event('input',{bubbles:true}))}
+else if(e.key=='Enter'){e.preventDefault();const ls=v.lastIndexOf('\n',s-1)+1,ind=v.slice(ls,s).match(/^ */)[0];t.value=v.slice(0,s)+'\n'+ind+v.slice(en);t.selectionStart=t.selectionEnd=s+1+ind.length;t.dispatchEvent(new Event('input',{bubbles:true}))}});
+['keyup','click'].forEach(ev=>m.addEventListener(ev,e=>{const t=e.target;if(/^a\d+$/.test(t.id||'')){const p=t.value.slice(0,t.selectionStart).split('\n');$('#lv'+t.id.slice(1)).textContent=`Ligne ${p.length} · Niveau d’indentation : ${lvl(p.pop())}`}}));
+m.addEventListener('scroll',e=>{if(/^a\d+$/.test(e.target.id||''))$('#g'+e.target.id.slice(1)).scrollTop=e.target.scrollTop},true);
+const txtM=id=>{const x=X(id);return 'T.D.O. locales : Objet | Type\n'+x.o.filter(r=>r[0]||r[1]).map(r=>r.join(' | ')).join('\n')+'\n\n'+x.a};
+const txt=i=>{const x=X(i);return 'T.D.N.T. (nouveaux types) :\n'+x.nt.filter(r=>r.trim()).join('\n')+'\n\nT.D.O. globales : Objet | Type\n'+x.o.filter(r=>r[0]||r[1]).map(r=>r.join(' | ')).join('\n')+'\n\nAlgorithme du programme principal :\n'+x.a+(x.mods||[]).map((id,k)=>'\n\n--- Module '+(k+1)+' ---\n'+txtM(id)).join('')};
+const copy=async s=>{try{await navigator.clipboard.writeText(s);return 1}catch(e){const a=document.createElement('textarea');a.value=s;document.body.appendChild(a);a.select();let ok=0;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}};
+m.addEventListener('click',async e=>{const d=e.target.dataset;
+if(d.add){X(+d.add).o.push(['','']);rows(+d.add)}
+if(d.addt){X(+d.addt).nt.push('');rowsT(+d.addt)}
+if(d.delt){const[i,k]=d.delt.split(',');const n=X(+i).nt;n.splice(k,1);if(!n.length)n.push('');X(+i).s=0;rowsT(+i);stat(+i);sv()}
+if(d.del){const[i,k]=d.del.split(',');const o=X(+i).o;o.splice(k,1);if(!o.length)o.push(['','']);X(P0(+i)).s=0;rows(+i);stat(P0(+i));sv()}
+if(d.sk){e.preventDefault();const t=$('#a'+d.sk);if(!t.value.trim()){t.value='ALGORITHME Exercice'+d.sk+'\nDÉBUT\n    \nFIN';X(+d.sk).a=t.value;gut(+d.sk);sv()}}
+if(d.save){const i=+d.save;if(!X(i).a.trim()){alert('Écris ton algorithme avant d’enregistrer.');return}if((X(i).mods||[]).some(id=>!X(id).a.trim())){alert('Un module est vide : écris-le ou supprime-le avant d’enregistrer.');return}X(i).s=1;stat(i);sv()}
+if(d.copy){const b=e.target,o=b.textContent;b.textContent=(await copy(txt(+d.copy)))?'Copié !':'Échec';setTimeout(()=>b.textContent=o,1500)}});
+// report
+function an(i){const x=X(i),a=x.a,L=a.split('\n').filter(l=>l.trim()),mx=Math.max(0,...L.map(lvl)),lo=(a.match(/\b(Pour|Tant\s*que|Répéter|Repeter)\b/gi)||[]).length,si=(a.match(/\bSi\b/gi)||[]).length,ob=x.o.filter(r=>r[0].trim()).length,ty=x.o.filter(r=>r[0].trim()&&!r[1].trim()).length,py=x.p.split('\n').filter(l=>l.trim()).length,fl=[];
+const dv=/\bD[ée]but\b/i.test(a)&&/\bFin\b/i.test(a);if(!dv)fl.push('Début/Fin manquant');if(!si&&!lo)fl.push('aucune structure de contrôle (Si, Pour, Tant que, Répéter) détectée');if(!ob)fl.push('aucun objet déclaré');if(ty)fl.push(ty+' objet(s) sans type');if(!py)fl.push('Python absent');else{const q=LP(x.p);if(q.l)fl.push('liste(s) utilisée(s) au lieu de tableaux numpy');if(!q.i)fl.push('import numpy absent')}if(L.length>3&&mx==0)fl.push('indentation absente');
+PYB(i).forEach(m=>fl.push(m));const sc=Math.round(100*([dv,si>0||lo>0,ob>0&&!ty,py>0,mx>0||L.length<=3].filter(Boolean).length)/5);return{i,mm:(x.mods||[]).length,lines:L.length,mx,lo,si,ob,py,fl,sc,nt:x.nt.filter(r=>r.trim()).length}}
+let R='',SM='';
+$('#mk').onclick=()=>{const p=S.p;if(!p.n.trim()||!p.e.trim()||!p.w.trim()){alert('Complète ton nom, email et WhatsApp dans l’en-tête.');scrollTo(0,0);return}stop();
+const A=ID.map(an),avg=Math.round(A.reduce((s,a)=>s+a.sc,0)/2),bar='='.repeat(40);
+SM=`République Tunisienne – Ministère de l’Éducation\nLycée Hannibal – Ariana | Année scolaire 2026 – 2027\nEmail : aymen.a@hotmail.com | Niveau : 3 Scientifique\n\nRAPPORT D’ÉVALUATION – Algorithmique : tableaux et modules (Niveau 3 Scientifique)\n${bar}\nÉtudiant : ${p.n}\nEmail : ${p.e}\nWhatsApp : ${p.w}\nTemps total : ${fmt(S.t)}\nExercices enregistrés : 2/2\nIndice de complétude : ${avg}%\nDate : ${new Date().toLocaleString('fr-FR')}\n${bar}\n`+A.map(a=>`Ex ${a.i} : ${a.sc}% | ${a.lines} lignes | indent. max ${a.mx} (erreurs : ${IE(X(a.i).a)+(X(a.i).mods||[]).reduce((t,id)=>t+IE(X(id).a),0)}) | modules ${a.mm} | boucles ${a.lo} | tests ${a.si} | objets ${a.ob} | nouveaux types ${a.nt} | conformité ${CS(a.i)}/20 | Python ${a.py} lignes (${X(a.i).r===1?'exécuté sans erreur':X(a.i).r===0?'dernière exécution en erreur':'jamais exécuté'})`+(a.fl.length?`\n   ${a.fl.join(' ; ')}`:'\n   Structure complète')).join('\n');
+R=SM+`\n${bar}\nDÉTAIL DES TRAVAUX\n`+ID.map(i=>`\n--- Exercice ${i} : Algorithme ---\n${txt(i)}\n--- Exercice ${i} : Conformité (conventions 2SI et 2024) ---\n${[i].concat(X(i).mods||[]).map(id=>{const F=CF(id);return '['+lab(i,id)+'] '+Math.max(0,20-2*F.filter(f=>f.p).length)+'/20'+(F.length?'\n'+F.map(f=>'- '+f.m).join('\n'):'\n- aucune faute relevée')}).join('\n')}\n--- Exercice ${i} : Python ---\n${X(i).p}\n`).join('');
+$('#rt').textContent=R;$('#kp').innerHTML=[['Temps',fmt(S.t)],['Complétude',avg+'%'],['Objets',A.reduce((s,a)=>s+a.ob,0)],['Lignes',A.reduce((s,a)=>s+a.lines,0)]].map(k=>`<div class="kpi"><b>${k[1]}</b>${k[0]}</div>`).join('');$('#rp').hidden=false;$('#rp').scrollIntoView({behavior:'smooth'})};
+$('#cp').onclick=async e=>{e.target.textContent=(await copy(R))?'Copié':'Échec'};
+$('#dl').onclick=()=>{const a=document.createElement('a');a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(R);a.download='evaluation-modules-'+(S.p.n.trim().replace(/\s+/g,'_')||'etudiant')+'.txt';a.click()};
+$('#sd').onclick=async()=>{await copy(R);const a=document.createElement('a');a.href='mailto:aymen.a@hotmail.com?subject='+encodeURIComponent('Évaluation Modules N3 – '+S.p.n)+'&body='+encodeURIComponent(SM.slice(0,1500)+'\n\n[Colle ici le rapport complet, déjà copié dans ton presse-papiers]');a.target='_blank';a.click()};
+function LS(v,s){return s?v.lastIndexOf('\n',s-1)+1:0}
+function ana(txt){const st=[],R=[];
+txt.split('\n').forEach(l=>{const t=nz(l),r={e:0,er:''};R.push(r);
+if(!t){r.s=1;r.e=st.length;return}
+if(t[0]=='/'){r.c=1;r.e=st.length;return}
+if(/^\w+\s*(\[[^\]]*\])?\s*(<-|←|:=)/.test(t)){r.e=st.length;return}
+const cl=n=>{const k=st.lastIndexOf(n);if(k<0)r.er='« '+(n=='Début'?'Fin':'Fin '+n)+' » sans « '+n+' » ouvert';else{if(k<st.length-1)r.er='le bloc « '+st[st.length-1]+' » n’est pas fermé';st.length=k}r.e=st.length};
+if(/^fin\s*si\b/.test(t))cl('Si');
+else if(/^fin\s*pour\b/.test(t))cl('Pour');
+else if(/^fin\s*tant\s*que\b/.test(t))cl('Tant que');
+else if(/^fin\s*selon\b/.test(t))cl('Selon');
+else if(/^jusqu/.test(t))cl('Répéter');
+else if(/^fin\b/.test(t))cl('Début');
+else if(/^sinon\b/.test(t)){const p=st[st.length-1];if(p!='Si'&&p!='Selon')r.er='« Sinon » en dehors d’un Si';r.e=p=='Selon'?st.length:Math.max(st.length-1,0)}
+else if(/^(alors|faire)\b/.test(t)){r.e=Math.max(st.length-1,0)}
+else{r.e=st.length;const o=/^si\b/.test(t)?'Si':/^pour\b/.test(t)?'Pour':/^tant\s*que\b/.test(t)?'Tant que':/^repeter\b/.test(t)?'Répéter':/^debut\b/.test(t)?'Début':/^selon\b/.test(t)?'Selon':'';if(o)st.push(o)}});
+return{R,st}}
+function BAD(l,r){return !r.s&&!r.c&&l.trim()&&(lvl(l)!==r.e||l.match(/^ */)[0].length%IN||r.er)}
+function IE(txt){const A=ana(txt);let n=A.st.length;txt.split('\n').forEach((l,k)=>{if(BAD(l,A.R[k]))n++});return n}
+function gut(i){const v=$('#a'+i).value,A=ana(v);hlA(i);$('#g'+i).innerHTML=v.split('\n').map((l,k)=>{const a=lvl(l),x=BAD(l,A.R[k]);return `<span class='l${Math.min(a,5)}${x?' bad':''}'>${k+1} ${x?'!':'n'}${a}</span>`}).join('\n')}
+function fixLine(t){const v=t.value,s=t.selectionStart,ls=LS(v,s);let le=v.indexOf('\n',s);if(le<0)le=v.length;
+const ln=v.slice(ls,le),tx=ln.trimStart();if(!/^(fin\s*(si|pour|tant\s*que|selon)|sinon|jusqu)/.test(nz(tx)))return;
+const a=ana(v.slice(0,le)),ni=' '.repeat(a.R[a.R.length-1].e*IN),old=ln.length-tx.length;if(ln.slice(0,old)===ni)return;
+t.value=v.slice(0,ls)+ni+tx+v.slice(le);t.selectionStart=t.selectionEnd=Math.max(ls+ni.length,s+ni.length-old)}
+function reind(t){const A=ana(t.value);t.value=t.value.split('\n').map((l,k)=>{const r=A.R[k];return r.s?l:' '.repeat(r.e*IN)+l.trimStart()}).join('\n');t.dispatchEvent(new Event('input',{bubbles:true}))}
+function stat2(t){if(!/^a\d+$/.test(t.id||''))return;const v=t.value,s=t.selectionStart,p=v.slice(0,s).split('\n'),q=ana(v.slice(0,s-p[p.length-1].length));$('#lv'+t.id.slice(1)).textContent='Ligne '+p.length+' · niveau '+lvl(p[p.length-1])+(q.st.length?' · dans : '+q.st.join(' / '):' · hors bloc')}
+['keyup','click','input'].forEach(ev=>m.addEventListener(ev,e=>stat2(e.target)));
+m.addEventListener('keydown',e=>{const t=e.target;if(!/^[ap]\d+$/.test(t.id||'')||(e.key!='Tab'&&e.key!='Enter'))return;e.preventDefault();e.stopPropagation();
+const v=t.value,s=t.selectionStart,en=t.selectionEnd,al=t.id[0]=='a',a0=LS(v,s);
+if(e.key=='Tab'){let b0=v.indexOf('\n',en>s?en-1:en);if(b0<0)b0=v.length;let d0=0,dl=0;
+const o=v.slice(a0,b0).split('\n').map((l,k)=>{if(e.shiftKey){const w=Math.min(IN,l.match(/^ */)[0].length);if(!k)d0=-w;dl-=w;return l.slice(w)}if(!k)d0=IN;dl+=IN;return ' '.repeat(IN)+l}).join('\n');
+t.value=v.slice(0,a0)+o+v.slice(b0);t.selectionStart=Math.max(a0,s+d0);t.selectionEnd=Math.max(a0,en+dl)}
+else{const pre=v.slice(a0,s),tx=pre.trimStart();let nl=pre,ni=pre.match(/^ */)[0];
+if(al&&AUTO){const A=ana(v.slice(0,s)),r=A.R[A.R.length-1];ni=' '.repeat(A.st.length*IN);if(!r.s)nl=' '.repeat(r.e*IN)+tx}
+else if(!al&&/:\s*$/.test(pre))ni+=' '.repeat(IN);
+t.value=v.slice(0,a0)+nl+'\n'+ni+v.slice(en);t.selectionStart=t.selectionEnd=a0+nl.length+1+ni.length}
+t.dispatchEvent(new Event('input',{bubbles:true}))},true);
+m.addEventListener('change',e=>{if(e.target.classList.contains('au')){AUTO=e.target.checked;document.querySelectorAll('.au').forEach(c=>c.checked=AUTO)}});
+function cmp(id){const t=$('#a'+id).value,M=[];if(!t.trim())return{M:['Espace vide : écris d’abord son algorithme.'],sc:null};const A=ana(t);
+t.split('\n').forEach((l,k)=>{const r=A.R[k];if(BAD(l,r))M.push('Ligne '+(k+1)+' : niveau '+lvl(l)+', attendu '+r.e+(r.er?' — '+r.er:''))});
+A.st.forEach(b=>M.push('Bloc « '+b+' » jamais fermé'));const F=CF(id);F.forEach(f=>M.push(f.m));return{M,sc:Math.max(0,20-2*F.filter(f=>f.p).length)}}
+function ckRun(id,fx){const t=$('#a'+id),c=$('#ck'+id);if(!t.value.trim()){c.className='ckb e';c.textContent='Écris d’abord ton algorithme.';return null}
+if(fx)reind(t);const r=cmp(id),M=r.M.slice();if(id<=9)PYB(id).forEach(q=>M.push(q));
+c.className='ckb '+(M.length?'e':'k');c.innerHTML=(M.length?M.map(esc).join('<br>'):'Indentation, blocs et conformité corrects')+'<br><b>Conformité (conventions 2SI et 2024) : '+r.sc+'/20 — '+(id>9?'ce module, compilé seul':'programme principal seul (chaque module se compile dans son onglet)')+'</b>';return r}
+m.addEventListener('click',e=>{const d=e.target.dataset;
+if(d.ca){e.preventDefault();const i=+d.ca,L=[i].concat(X(i).mods||[]);L.forEach(id=>{if(id!==i)ckRun(id)});
+const c=$('#ck'+i);c.className='ckb k';c.innerHTML=L.map(id=>{const r=cmp(id);return '<b>'+esc(lab(i,id))+'</b> : '+(r.sc==null?'espace vide':r.sc+'/20')+'<br>'+(r.sc==null||r.M.length?r.M.map(esc).join('<br>'):'Aucune faute')}).join('<hr style="border:0;border-top:1px solid #cbd5e1;margin:8px 0">')+(PYB(i).length?'<hr style="border:0;border-top:1px solid #cbd5e1;margin:8px 0"><b>Python (espace unique)</b><br>'+PYB(i).map(esc).join('<br>'):'');return}
+if(!d.ck&&!d.fx)return;e.preventDefault();ckRun(+(d.ck||d.fx),!!d.fx)});
+const RN={},esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function cw(i,s,c){const o=$('#co'+i),p=document.createElement('span');if(c)p.className=c;p.textContent=s;o.appendChild(p);o.scrollTop=o.scrollHeight}
+const HT={NameError:'variable ou fonction non définie (faute de frappe ? variable non initialisée ?)',SyntaxError:'erreur de syntaxe (deux-points, parenthèse, guillemet…)',IndentationError:'erreur d’indentation (4 espaces par niveau)',IndexError:'indice hors des limites du tableau (en Python, le 1er indice est 0)',TypeError:'types incompatibles dans l’opération',ValueError:'valeur invalide pour cette conversion',ZeroDivisionError:'division par zéro',TimeoutError:'programme trop long : boucle infinie ?'};
+function pyVars(i,mod){const r=[];Object.keys(mod.$d).forEach(k=>{if(k[0]=='_')return;const v=mod.$d[k],t=v.tp$name||'';if(t=='function'||t=='module')return;let s;try{const q=Sk.misceval.objectRepr(v);s=typeof q=='string'?q:q.v}catch(e){s='?'}r.push(`<tr><td>${esc(k)}</td><td>${esc(t)}</td><td>${esc(String(s).slice(0,90))}</td></tr>`)});
+$('#va'+i).innerHTML=r.length?`<table class='o' style='margin-top:8px'><thead><tr><th>Variable</th><th>Type</th><th>Valeur</th></tr></thead><tbody>${r.join('')}</tbody></table>`:''}
+async function runPy(i){if(RN['b'+i])return;$('#co'+i).textContent='';$('#va'+i).innerHTML='';
+if(typeof Sk=='undefined'){cw(i,'Moteur Python non chargé (vérifie ta connexion internet puis recharge la page).','er');return}
+const code=$('#p'+i).value;if(!code.trim()){cw(i,'Écris d’abord ton code Python.','er');return}
+RN['b'+i]=1;cw(i,'Exécution…\n','ht');LP(code).w.forEach(w=>cw(i,''+w+'\n','ht'));
+npSetup();Sk.configure({output:s=>cw(i,s),read:f=>{if(Sk.builtinFiles===undefined||Sk.builtinFiles.files[f]===undefined)throw 'File not found: '+f;return Sk.builtinFiles.files[f]},__future__:Sk.python3,inputfunTakesPrompt:true,execLimit:10000,yieldLimit:200,
+inputfun:p=>new Promise((res,rej)=>{cw(i,p||'','pr');const b=$('#ci'+i),x=$('#cx'+i);b.hidden=false;x.value='';x.focus();RN['x'+i]=rej;RN['r'+i]=v=>{RN['r'+i]=null;RN['x'+i]=null;b.hidden=true;cw(i,v+'\n','us');res(v)}})});
+try{const mod=await Sk.misceval.asyncToPromise(()=>Sk.importMainWithBody('<stdin>',false,code,true));pyVars(i,mod);cw(i,'\nProgramme terminé.','ok');X(i).r=1}
+catch(e){let m=String(e);const n=(m.match(/^(\w+Error)/)||[])[1]||'',fr=(e.traceback||[]).filter(f=>/stdin/.test(f.filename)).pop();if(fr)m=m.replace(/ on line \d+\s*$/,'')+' (ligne '+fr.lineno+')';cw(i,'\n'+m,'er');if(HT[n])cw(i,'\n'+HT[n],'ht');X(i).r=0}
+RN['b'+i]=0;$('#ci'+i).hidden=true;sv()}
+function stopPy(i){if(RN['x'+i])RN['x'+i](new Error('Arrêté par l’utilisateur'));else if(typeof Sk!='undefined')Sk.execLimit=1}
+function sendIn(i){const f=RN['r'+i];if(f)f($('#cx'+i).value)}
+m.addEventListener('click',e=>{const d=e.target.dataset;if(d.run)runPy(+d.run);if(d.stop)stopPy(+d.stop);if(d.send)sendIn(+d.send);if(d.clr){$('#co'+d.clr).textContent='';$('#va'+d.clr).innerHTML=''}});
+m.addEventListener('keydown',e=>{if(e.key=='Enter'&&/^cx\d$/.test(e.target.id)){e.preventDefault();sendIn(+e.target.id[2])}});
+
+const NPY="class ndarray(object):\n    def __init__(self, d, dt):\n        self._d = d\n        self.dtype = dt\n        self.size = len(d)\n        self.shape = (len(d),)\n        self.ndim = 1\n    def _ix(self, i):\n        n = len(self._d)\n        if not isinstance(i, int):\n            raise IndexError('indice invalide : un entier est attendu (only integers are valid indices)')\n        if i < -n or i >= n:\n            raise IndexError('index %d is out of bounds for axis 0 with size %d' % (i, n))\n        if i < 0:\n            return i + n\n        return i\n    def _c(self, v):\n        if self.dtype == 'int':\n            if isinstance(v, str):\n                return int(v)\n            return int(v)\n        if self.dtype == 'float':\n            return float(v)\n        if self.dtype == 'str':\n            return str(v)\n        return v\n    def __getitem__(self, i):\n        if isinstance(i, slice):\n            return ndarray(self._d[i], self.dtype)\n        return self._d[self._ix(i)]\n    def __setitem__(self, i, v):\n        self._d[self._ix(i)] = self._c(v)\n    def __len__(self):\n        return len(self._d)\n    def __iter__(self):\n        return iter(self._d)\n    def __contains__(self, v):\n        return v in self._d\n    def __str__(self):\n        d = self._d\n        if len(d) == 0:\n            return '[]'\n        if self.dtype == 'str':\n            w = max([len(repr(x)) for x in d])\n            return '[' + ' '.join([repr(x).ljust(w) for x in d]).rstrip() + ']'\n        w = max([len(str(x)) for x in d])\n        return '[' + ' '.join([str(x).rjust(w) for x in d]) + ']'\n    def __repr__(self):\n        d = self._d\n        if self.dtype == 'str':\n            return 'array([' + ', '.join([repr(x) for x in d]) + \"], dtype='<U')\"\n        w = 0\n        if len(d) > 0:\n            w = max([len(str(x)) for x in d])\n        return 'array([' + ', '.join([str(x).rjust(w) for x in d]) + '])'\n    def copy(self):\n        return ndarray(self._d[:], self.dtype)\n    def sort(self):\n        self._d.sort()\n    def sum(self):\n        t = 0\n        for x in self._d:\n            t = t + x\n        return t\n    def max(self):\n        return max(self._d)\n    def min(self):\n        return min(self._d)\n\ndef _dt(dtype):\n    if dtype is None:\n        return None\n    if dtype is int or dtype == 'int' or dtype == 'int32' or dtype == 'int64':\n        return 'int'\n    if dtype is float or dtype == 'float' or dtype == 'float64':\n        return 'float'\n    if dtype is str or dtype == 'str':\n        return 'str'\n    if dtype is bool or dtype == 'bool':\n        return 'bool'\n    return None\n\ndef array(data, dtype=None):\n    d = [x for x in data]\n    for x in d:\n        if isinstance(x, (list, tuple)):\n            raise TypeError('seuls les tableaux a une dimension sont disponibles ici')\n    dt = _dt(dtype)\n    if dt is None:\n        if len(d) == 0:\n            dt = 'float'\n        elif [x for x in d if isinstance(x, str)]:\n            dt = 'str'\n        elif [x for x in d if isinstance(x, float)]:\n            dt = 'float'\n        elif len([x for x in d if isinstance(x, bool)]) == len(d):\n            dt = 'bool'\n        else:\n            dt = 'int'\n    a = ndarray(d, dt)\n    for k in range(len(d)):\n        d[k] = a._c(d[k])\n    return a\n\ndef zeros(n, dtype=float):\n    dt = _dt(dtype)\n    if dt is None:\n        dt = 'float'\n    v = 0\n    if dt == 'float':\n        v = 0.0\n    if dt == 'str':\n        v = ''\n    if dt == 'bool':\n        v = False\n    return ndarray([v for k in range(n)], dt)\n\ndef empty(n, dtype=float):\n    return zeros(n, dtype)\n\ndef ones(n, dtype=float):\n    a = zeros(n, dtype)\n    for k in range(n):\n        a[k] = 1\n    return a\n\ndef arange(a, b=None, step=1):\n    if b is None:\n        b = a\n        a = 0\n    return ndarray([x for x in range(a, b, step)], 'int')\nimport math\n\ndef sqrt(x):\n    return math.sqrt(x)\n";
+function npSetup(){if(typeof Sk!='undefined'&&Sk.builtinFiles)Sk.builtinFiles.files['src/lib/numpy/__init__.py']=NPY}
+HT.NameError='variable ou fonction non définie (faute de frappe ? variable non initialisée ? import numpy ou math oublié ?)';
+HT.AttributeError='cette méthode n’existe pas pour un tableau numpy (pas de append : la taille est fixe)';
+HT.ImportError='module introuvable : écris  from numpy import *  ou  from math import sqrt';
+function LP(code){const c=code.split('\n').map(l=>l.replace(/#.*$/,'').replace(/'[^'\n]*'|"[^"\n]*"/g,"''")).join('\n'),w=[];
+const imp=/(^|\n)\s*(from\s+numpy\s+import|import\s+numpy)/.test(c),ua=/\barray\s*\(/.test(c),l=/\.(append|extend|insert|pop|remove)\s*\(|\blist\s*\(|=\s*\[/.test(c);
+if(ua&&!imp)w.push('array() demande : from numpy import *');
+if(l)w.push('les listes sont interdites : utilise un tableau numpy, par ex.  T = array([int()]*n)');
+if(!/\binput\s*\(/.test(c))w.push('lecture : utilise input() pour lire les valeurs');
+if(/\bsqrt\s*\(/.test(c)&&!/(from\s+(math|numpy)\s+import|import\s+(math|numpy))/.test(c))w.push('sqrt demande : from math import sqrt');
+if(!/\bprint\s*\(/.test(c))w.push('affichage : utilise print(...)');
+return{l,i:!ua||imp,w}}
+const PK=new Set('and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield True False None'.split(' '));
+const PB=new Set('print input range len int float str bool abs min max sum round array zeros ones empty arange type ord chr'.split(' '));
+function hlPy(s){return s.replace(/(#.*)|('(?:[^'\\\n]|\\.)*'?|"(?:[^"\\\n]|\\.)*"?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_À-ÿ][\wÀ-ÿ]*)|([\s\S])/g,(m,c,st,n,w,o)=>c?`<span class='c'>${esc(c)}</span>`:st?`<span class='s'>${esc(st)}</span>`:n?`<span class='n'>${n}</span>`:w?(PK.has(w)?`<span class='k'>${w}</span>`:PB.has(w)?`<span class='b'>${w}</span>`:w):esc(o))+'\n '}
+function hlUp(i){const t=$('#p'+i),h=$('#hp'+i),g=$('#gp'+i);h.innerHTML=hlPy(t.value);h.scrollTop=t.scrollTop;h.scrollLeft=t.scrollLeft;if(g){const n=t.value.split('\n').length;g.textContent=Array.from({length:n},(_,k)=>k+1).join('\n');g.scrollTop=t.scrollTop}}
+m.addEventListener('input',e=>{if(/^p\d$/.test(e.target.id))hlUp(+e.target.id[1])});
+m.addEventListener('scroll',e=>{if(/^p\d$/.test(e.target.id)){const h=$('#hp'+e.target.id[1]);h.scrollTop=e.target.scrollTop;h.scrollLeft=e.target.scrollLeft}},true);
+m.addEventListener('click',e=>{const d=e.target.dataset;if(d.mod){const t=$('#p'+d.mod);if(!t.value.trim()){t.value=d.mod=='1'?'from numpy import *\n\nn = int(input("Donner n : "))\n':d.mod=='2'?'n = int(input("Donner la valeur de départ : "))\n':'ch = input("Saisir votre texte : ")\n';t.dispatchEvent(new Event('input',{bubbles:true}))}}});
+ID.forEach(hlUp);
+const KWS=new Set('algorithme debut fin si alors sinon finsi selon faire pour de a finpour tant que fintantque repeter jusqu lire ecrire ecrire_nl lire_ligne div mod et ou non dans appartient vrai faux abs ent arrondi racinecarre alea ord chr long pos convch estnum valeur sous_chaine effacer majus pas fonction procedure retourner entier reel booleen caractere chaine caracteres tableau enregistrement fichier texte ouvrir fermer fin_fichier lignes colonnes'.split(' '));
+const FN={racinecarre:1,abs:1,ent:1,arrondi:1,alea:2,ord:1,chr:1,long:1,pos:2,convch:1,estnum:1,valeur:1,sous_chaine:3,effacer:3,majus:1};
+/*MOD*/
+const SIMPLE=/^(entier|reel|booleen|caractere|chaine(\s+de\s+caracteres)?)$/;
+function P0(i){return i>9?Math.floor(i/100):i}
+const nt2=t=>(t||'').replace(/^chaine.*$/,'chaine');
+function typesOf(i){const r=new Set();X(i).nt.forEach(q=>{const m=nz(q).match(/^([a-z_]\w*)\s*=/);if(m)r.add(m[1])});return r}
+function parseHdr(a){const L=a.split('\n'),o={line:0,ok:0,params:[],kind:'',name:'',raw:'',rt:'',err:'',warn:''};
+const k=L.findIndex(l=>l.trim()&&!/^\s*\/\//.test(l));if(k<0)return o;o.line=k+1;
+const r=L[k].trim().replace(/\/\/.*$/,'').trim(),m0=r.match(/^(fonction|proc[ée]dure)\b\s*([A-Za-z_]\w*)?/i);
+if(!m0){o.err='la 1re ligne d’un module doit commencer par Fonction ou Procédure';return o}
+o.kind=/^f/i.test(m0[1])?'fonction':'procedure';o.raw=m0[2]||'';o.name=o.raw.toLowerCase();
+const KW0=o.kind=='fonction'?'Fonction':'Procédure';
+if(!o.name){o.err='nom du module manquant : '+KW0+' Nom (…)';return o}
+const rest=r.slice(m0[0].length).trim();o.loose=(rest.match(/[A-Za-z_]\w*/g)||[]).map(x=>x.toLowerCase());
+if(!rest.startsWith('(')){o.ok=1;o.warn='parenthèses manquantes : écris '+KW0+' '+o.raw+' () même sans paramètre';const t2=rest.match(/^:\s*(.+)$/);if(t2)o.rt=nz(t2[1]).trim();return o}
+let d=0,e=-1;for(let j=0;j<rest.length;j++){if(rest[j]=='(')d++;else if(rest[j]==')'){d--;if(!d){e=j;break}}}
+if(e<0){o.err='parenthèse fermante « ) » manquante dans l’en-tête';return o}
+const ps=rest.slice(1,e).trim(),after=rest.slice(e+1).trim();o.ok=1;
+if(after){const t2=after.match(/^:\s*(.+)$/);if(t2)o.rt=nz(t2[1]).trim();else{o.ok=0;o.err='après la parenthèse fermante, seul « : Type_résultat » est permis (fonction)';return o}}
+if(/;/.test(ps)){o.ok=0;o.err='sépare les paramètres par des virgules « , » et non par « ; »';return o}
+if(ps)ps.split(',').forEach(q=>{const g=nz(q).match(/^(@)?\s*([a-z_]\w*)\s*:\s*(.+)$/);if(g)o.params.push({ref:!!g[1],n:g[2],t:g[3].trim()});else o.params.push({bad:1,n:q.trim(),t:'',ref:false})});
+return o}
+function hlA(i){const t=$('#a'+i),h=$('#ha'+i);if(!h)return;h.innerHTML=t.value.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/@\s*[A-Za-z_]\w*/g,m=>"<b class='rf'>"+m+"</b>")+'\n ';h.scrollTop=t.scrollTop;h.scrollLeft=t.scrollLeft}
+m.addEventListener('scroll',e=>{const t=e.target;if(/^a\d+$/.test(t.id||'')){const h=$('#ha'+t.id.slice(1));if(h){h.scrollTop=t.scrollTop;h.scrollLeft=t.scrollLeft}}},true);
+function MODS(i){return (X(i).mods||[]).map(id=>Object.assign({id},parseHdr(X(id).a)))}
+function PA(s,j){let d=1,a=[''];while(j<s.length){const c=s[j];if(c=='(')d++;else if(c==')'){d--;if(!d)break}if(c==','&&d==1)a.push('');else a[a.length-1]+=c;j++}return a.length===1&&!a[0].trim()?[]:a}
+function CFA(i){const F=CF(i);MODS(i).forEach((m,k)=>CF(m.id).forEach(f=>F.push({p:f.p,m:'Module '+(m.raw||('n°'+(k+1)))+' – '+f.m})));return F}
+function PYB(i){const M=[],c=X(i).p.split('\n').map(l=>l.replace(/#.*$/,''));if(!c.join('').trim())return M;
+MODS(i).forEach(m=>{if(!m.name)return;const lab='Module « '+(m.raw||m.name)+' »';const k=c.findIndex(l=>new RegExp('^\\s*def\\s+'+m.name+'\\s*\\(','i').test(l));
+if(k<0){M.push(lab+' : aucune « def '+(m.raw||m.name)+'(…) » dans le Python');return}
+const g=c[k].match(/\(([^)]*)\)/),np=g&&g[1].trim()?g[1].split(',').length:0;
+if(m.ok&&np!==m.params.length)M.push(lab+' : la def Python a '+np+' paramètre(s), l’algorithme en déclare '+m.params.length);
+let b='';for(let j=k+1;j<c.length&&(!c[j].trim()||/^\s/.test(c[j]));j++)b+=c[j]+'\n';
+if(m.kind=='fonction'&&!/\breturn\b/.test(b))M.push(lab+' : la fonction Python n’a pas de « return »');
+if(m.kind=='procedure'&&/\breturn\s+\S/.test(b))M.push(lab+' : une procédure ne retourne pas de valeur ; en Python, ne retourne que ce que tes paramètres @ doivent rendre');
+m.params.filter(p=>p.ref&&SIMPLE.test(p.t)).forEach(p=>M.push(lab+' : le paramètre @'+p.n+' ('+p.t+') ne peut pas être modifié par une fonction Python ; retourne sa nouvelle valeur avec return')) });
+return M.map(x=>'Python : '+x)}
+function lab(i,id){if(id==i)return 'Principal';const m=parseHdr(X(id).a),k=(X(i).mods||[]).indexOf(id)+1;return m.raw?(m.kind=='fonction'?'Fonction ':'Procédure ')+m.raw:'Module '+k}
+function tabs(i){const x=X(i),a=x.tab||i,L=[i].concat(x.mods||[]);$('#tb'+i).innerHTML=L.map(id=>`<button data-tab='${i},${id}' class='${id==a?'on':''}'>${lab(i,id).replace(/[&<>]/g,'')}</button>`).join('')+`<button class='add' data-addm='${i}'>Ajouter un module</button>`;L.forEach(id=>{$('#w'+id).hidden=id!=a})}
+function mkMod(i,id){$('#wm'+i).insertAdjacentHTML('beforeend',`<div class="ws" id="w${id}" hidden><h3>T.D.O. locales – Tableau de déclaration des objets du module</h3><table class="o" id="o${id}"><thead><tr><th>Objet (O)</th><th>Type / Nature (T/N)</th><th></th></tr></thead><tbody></tbody></table><div class="acts"><button class="btn g" data-add="${id}">Ajouter un objet</button></div>
+<h3>Algorithme du module</h3><div class="ed aw"><pre class="gut" id="g${id}"></pre><pre class="hla" id="ha${id}" aria-hidden="true"></pre><textarea id="a${id}" spellcheck="false" wrap="off" placeholder="Fonction Nom (p1: Entier) : Entier&#10;DEBUT&#10;    ...&#10;    Retourner ...&#10;FIN"></textarea></div>
+<div class="bar"><span id="lv${id}">Ligne 1 · Niveau d’indentation : 0</span><span><a href='#' data-skm='${id},f'>Squelette fonction</a> · <a href='#' data-skm='${id},p'>Squelette procédure</a> · <a href='#' data-ck='${id}'>Vérifier</a> · <a href='#' data-fx='${id}'>Réindenter</a> · <label><input type='checkbox' class='au' ${AUTO?'checked':''}> Aide auto</label></span><div class='ckb' id='ck${id}' style='flex-basis:100%'></div></div>
+<div class="acts"><button class="btn g" data-delmod="${id}">Supprimer ce module</button></div></div>`);$('#a'+id).value=X(id).a;rows(id);gut(id)}
+m.addEventListener('click',e=>{const d=e.target.dataset;
+if(d.tab){const q=d.tab.split(',').map(Number);X(q[0]).tab=q[1];tabs(q[0]);sv()}
+if(d.addm){const i=+d.addm,x=X(i);if((x.mods||[]).length>=20){alert('Maximum 20 modules par exercice.');return}x.mn=(x.mn||0)+1;const id=i*100+x.mn;(x.mods=x.mods||[]).push(id);X(id);mkMod(i,id);x.tab=id;x.s=0;tabs(i);stat(i);sv()}
+if(d.delmod){const id=+d.delmod,i=P0(id);if(!confirm('Supprimer ce module et son contenu ?'))return;const x=X(i);x.mods=x.mods.filter(k=>k!=id);delete S.ex[id];$('#w'+id).remove();x.tab=i;x.s=0;tabs(i);stat(i);sv()}
+if(d.skm){e.preventDefault();const q=d.skm.split(','),id=+q[0],t=$('#a'+id);if(!t.value.trim()){t.value=q[1]=='f'?'Fonction Nom (p1: Entier) : Entier\nDEBUT\n    \n    Retourner \nFIN':'Procédure Nom (p1: Entier)\nDEBUT\n    \nFIN';X(id).a=t.value;X(P0(id)).s=0;gut(id);tabs(P0(id));sv()}}});
+const PRE2={long:'entier',pos:'entier',ord:'entier',ent:'entier',arrondi:'entier',alea:'entier',chr:'caractere',racinecarre:'reel',convch:'chaine',estnum:'booleen',valeur:'reel',sous_chaine:'chaine',effacer:'chaine',majus:'chaine'};
+const TLB=t=>({entier:'Entier',reel:'Réel',booleen:'Booléen',caractere:'Caractère',chaine:'Chaîne',chcar:'Caractère'}[t]||t);
+function LEV(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];for(let j=1;j<=b.length;j++)m[i][j]=i?0:j}for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function TNM(i){const r={};X(i).nt.forEach(q=>{const m=nz(q).match(/^([a-z_]\w*)\s*=\s*(.+)$/);if(m)r[m[1]]=m[2].replace(/\s+/g,' ').trim()});return r}
+function MODSUM(i){const L=MODS(i);if(!L.length)return '';return '<br><b>Compilation de chaque module (analysé seul) :</b>'+L.map((m,k)=>{const R0=CF(m.id),f=R0.filter(q=>q.p).length,w=R0.length-f,nm=(m.raw?(m.kind=='fonction'?'Fonction ':'Procédure ')+m.raw:'Module '+(k+1)).replace(/[&<>]/g,'');return '<br>- '+nm+' : '+(f?f+' faute(s)':'aucune faute')+(w?', '+w+' avertissement(s)':'')+' – '+Math.max(0,20-2*f)+'/20'}).join('')}
+function CF(i){const isM=i>9,pi=P0(i),x=X(i),T=x.a.split('\n').map(nz),F=[],ty={},gty={},MS=MODS(pi),MN={},hd=isM?parseHdr(x.a):null;MS.forEach(m=>{if(m.name)MN[m.name]=m});const DMG={},DML={},lt={},ISDM=q=>/^(fonction|procedure)\b/.test(nz(q[1]||''));X(pi).o.forEach(q=>{const n=q[0].trim().toLowerCase();if(n&&ISDM(q))DMG[n]=/^f/.test(nz(q[1]))?'fonction':'procedure'});if(isM)x.o.forEach(q=>{const n=q[0].trim().toLowerCase();if(n&&ISDM(q))DML[n]=/^f/.test(nz(q[1]))?'fonction':'procedure'});[DMG,DML].forEach(D=>Object.keys(D).forEach(k=>{if(!MN[k])MN[k]={kind:D[k],raw:k,name:k,ok:0,params:[],decl:1}}));const TN={};X(pi).nt.forEach(q=>{const m=nz(q).match(/^([a-z_]\w*)\s*=\s*(.+)$/);if(m)TN[m[1]]=m[2]});const isA=t=>/^tableau/.test(t||'')||/^tableau/.test(TN[t]||'');if(!x.a.trim())return F;
+const P=(l,m)=>F.push({p:1,m:'Faute (ligne '+l+') : '+m}),W=(l,m)=>F.push({p:0,m:'Avertissement (ligne '+l+') : '+m});
+const TM=TNM(pi),canon=t=>{t=(t||'').replace(/\s+/g,' ').replace(/^chaine.*$/,'chaine');return TM[t]||t},bal=q=>{let d=0;for(const c of q){if(c=='(')d++;else if(c==')'){d--;if(d<0)return false}}return d==0};
+const sp=q=>{const out=[],ops=[];let d=0,cur='';for(let j=0;j<q.length;j++){const c=q[j];if(c=='('||c=='[')d++;if(c==')'||c==']')d--;if(!d&&'+-*/÷%'.includes(c)&&cur.trim()!==''){out.push(cur);ops.push(c);cur='';continue}cur+=c}out.push(cur);return{out,ops}};
+const leaf=q=>{q=q.trim();if(q=='"~"')return 'chcar';if(q=='""')return 'chaine';if(/^-?\d+$/.test(q))return 'entier';if(/^-?\d+\.\d+$/.test(q))return 'reel';if(/^(vrai|faux)$/.test(q))return 'booleen';let m;
+if((m=q.match(/^-?([a-z_]\w*)$/)))return (m[1] in ty)?canon(ty[m[1]]):null;
+if((m=q.match(/^([a-z_]\w*)\s*\[.*\]$/))){const t=canon(ty[m[1]]||''),mm=t.match(/^tableau\s+de\s+\S+\s+(.+)$/);if(mm)return canon(mm[1]);return /^chaine/.test(t)?'caractere':null}
+if((m=q.match(/^([a-z_]\w*)\s*\(.*\)$/))){const nm=m[1];if(MN[nm]&&MN[nm].kind=='fonction'&&MN[nm].rt)return canon(MN[nm].rt);return PRE2[nm]||null}
+if(q.startsWith('(')&&q.endsWith(')')&&bal(q.slice(1,-1)))return TI(q);return null};
+const TI=e0=>{let e=(e0||'').trim();while(e.startsWith('(')&&e.endsWith(')')&&bal(e.slice(1,-1)))e=e.slice(1,-1).trim();if(!e)return null;
+let d=0,cmp=false;for(let j=0;j<e.length;j++){const c=e[j];if(c=='('||c=='[')d++;else if(c==')'||c==']')d--;else if(!d&&/[<>=≠≤≥#]/.test(c))cmp=true}
+if(cmp||/(^|\s)(et|ou|non)(\s|\()/.test(e.replace(/\([^()]*\)/g,'')))return 'booleen';
+const q=e.replace(/\bdiv\b/g,'÷').replace(/\bmod\b/g,'%'),r=sp(q);if(r.out.length==1)return leaf(r.out[0]);
+const ts=r.out.map(leaf);if(ts.some(t=>!t))return null;if(r.ops.includes('/'))return 'reel';
+if(ts.some(t=>t=='chaine'||t=='chcar'||t=='caractere'))return r.ops.every(o=>o=='+')?'chaine':null;
+if(ts.includes('reel'))return 'reel';return ts.every(t=>t=='entier')?'entier':null};
+
+X(pi).o.forEach(r=>{const n=r[0].trim().toLowerCase();if(n&&!ISDM(r))gty[n]=nz(r[1])});if(isM)Object.assign(ty,gty);x.o.forEach(r=>{const n=r[0].trim();if(!n)return;if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(n))P(isM?'T.D.O. locales':'T.D.O. globales','identificateur « '+n+' » invalide (lettre, puis lettres/chiffres/_ ; sans accent ni espace)');if(ISDM(r))return;lt[n.toLowerCase()]=1;ty[n.toLowerCase()]=nz(r[1])});if(isM&&hd.ok)hd.params.forEach(p=>{if(p.n in lt)P(hd.line,'« '+p.n+' » est déjà déclaré dans la T.D.O. locale : un paramètre ne se redéclare pas');ty[p.n]=nz(p.t)});if(isM&&!hd.ok&&hd.loose)hd.loose.forEach(v=>{if(!(v in lt))ty[v]=ty[v]||'?'});
+const f0=T.findIndex(t=>t);if(!isM){if(!/^algorithme\s+[a-z]\w*$/.test(T[f0]||''))P(f0<0?1:f0+1,'la 1re ligne doit être : ALGORITHME Nom')}
+else{const L0=hd.line||1;if(hd.err)P(L0,hd.err);else{if(hd.warn)W(L0,hd.warn);
+if(hd.kind=='fonction'){if(!hd.rt)P(L0,'une fonction déclare son type de résultat : Fonction Nom (…) : Type');else if(!SIMPLE.test(hd.rt))P(L0,'une fonction retourne un seul résultat de type simple (Entier, Réel, Booléen, Caractère, Chaîne)')}else if(hd.rt)P(L0,'une procédure n’a pas de type de résultat');
+const tn=typesOf(pi);hd.params.forEach(p=>{if(p.bad)P(L0,'paramètre « '+p.n+' » mal écrit : chaque paramètre s’écrit [@]nom: Type, avec son propre type');else if(!SIMPLE.test(p.t)&&!tn.has(p.t))P(L0,'type du paramètre « '+p.n+' » inconnu : type simple ou nouveau type déclaré dans la T.D.N.T.')});
+if(MS.filter(m=>m.name===hd.name).length>1)P(L0,'le nom « '+hd.raw+' » est déjà utilisé par un autre module');
+if(FN[hd.name]||KWS.has(hd.name))P(L0,'« '+hd.raw+' » est un nom réservé (fonction prédéfinie ou mot-clé)')}}
+if(!T.some(t=>t=='debut'))P('—','« DÉBUT » manquant');if(!T.some(t=>t=='fin'))P('—','« FIN » manquant');
+T.forEach((t,k)=>{if(!t||t[0]=='/')return;const n=k+1,nx=T[k+1]||'',s=t.replace(/\/\/.*$/,'').replace(/'[^']*'|"[^"]*"/g,z=>z.length==3?'"~"':'""').trim();let g;
+if(isM&&k===hd.line-1)return;
+if(/^(fonction|procedure)\b/.test(t)){P(n,isM?'un seul module par espace de travail':'un module s’écrit dans son propre espace de travail (onglet « Ajouter un module »)');return}
+if(isM&&/^algorithme\b/.test(t)){P(n,'« ALGORITHME » est réservé au programme principal');return}
+const KW=v=>KWS.has(v)&&!(v=='a'&&!/^(pour|jusqu)/.test(s));
+const AG={};for(const m of s.matchAll(/\b([a-z_]\w*)\s*\(/g)){const md=MN[m[1]];if(md&&!(m[1] in ty))PA(s,m.index+m[0].length).forEach(q=>(q.match(/[a-z_]\w*/g)||[]).forEach(v=>{AG[v]=md.raw||m[1]}))}
+const U=v=>{const call=new RegExp('\\b'+v+'\\s*\\(').test(s);let mm;if(call){const sg=Object.values(MN).map(q=>q.raw||q.name).filter(q=>q.toLowerCase()!==v&&LEV(q.toLowerCase(),v)<=2)[0];mm='module ou fonction « '+v+' » inconnu : crée son espace de travail (Ajouter un module)'+(sg?' — ou voulais-tu écrire « '+sg+' » ?':'')}
+else if(v in AG)mm='paramètre effectif « '+v+' » du module « '+AG[v]+' » : il doit être déclaré dans la T.D.O. '+(isM?'locale du module appelant ou dans la T.D.O. globale du PP':'globale du programme principal');
+else mm='« '+v+' » n’est déclaré dans aucune T.D.O. visible'+(isM?' (ni locale, ni paramètres, ni globale du PP)':' (T.D.O. globale du PP)');
+if(!F.some(f=>f.m==='Faute (ligne '+n+') : '+mm))P(n,mm)};
+const dec=v=>{if(v&&!KW(v)&&!(v in ty)&&!(v in MN))U(v)};
+if(/^[a-z_]\w*(\[[^\]]*\])?\s*:=/.test(s))P(n,'« := » n’existe pas : utilise ←');
+else if(/^[a-z_]\w*(\[[^\]]*\])?\s*=(?!=)/.test(s))P(n,'affectation écrite avec « = » : utilise ← (ou <-)');
+if((g=s.match(/^([a-z_]\w*)(\[[^\]]*\])?\s*(<-|←|=|:=)/))){dec(g[1]);if(g[2]&&/^chaine/.test(ty[g[1]]||''))P(n,'une chaîne ne se modifie pas case par case')}
+if((g=s.match(/^pour\s+([a-z_]\w*)/)))dec(g[1]);
+if((g=s.match(/^lire\s*\(([^)]*)\)/)))g[1].split(',').forEach(v=>dec(v.trim().replace(/\[.*$/,'')));
+if(/==/.test(s))P(n,'« == » n’existe pas : l’égalité s’écrit « = »');
+if(/!=|<>/.test(s))P(n,'« différent » s’écrit ≠ (ou #), pas != ni <>');
+if(/%/.test(s))P(n,'reste de la division : mod');
+if(/&&|\|\|/.test(s)||/(^|[^<>=!#:])!(?!=)/.test(s))P(n,'opérateurs logiques : Et, Ou, Non');
+if(/\b(and|or|not)\b/.test(s))P(n,'« and / or / not » s’écrivent Et, Ou, Non');
+if(/\b(print|input|len|range|def|elif|else|while|for|if|import|return|append)\b/.test(s))P(n,'mot Python dans l’algorithme');
+if(/^(ecrire_nl|ecrire|lire_ligne|lire)(\s|\(|$)/.test(s)&&!/^(ecrire_nl|ecrire|lire_ligne|lire)\s*\(/.test(s))P(n,'syntaxe : Écrire("message", x)  /  Écrire_nl(…)  /  Lire(x)');
+if(/^(afficher|saisir|lecture|ecriture)\b/.test(s)&&!(((s.match(/^([a-z_]\w*)/)||[])[1]) in MN))P(n,'utilise Écrire(…) ou Lire(…)');
+if(/^(si|sinon\s+si)\b/.test(s)&&!/\balors\b/.test(s)&&!/^alors/.test(nx))P(n,'« ALORS » manquant');
+if(/^tant\s*que\b/.test(s)&&!/\bfaire\b/.test(s)&&!/^faire/.test(nx))P(n,'« FAIRE » manquant');
+if(/^pour\b/.test(s)){if(!/^pour\s+[a-z_]\w*\s+de\s+.+\s+a\s+.+/.test(s))P(n,'syntaxe : Pour Compteur de Début à Fin [Pas = valeur] Faire');else{if(!/\bfaire\s*$/.test(s)&&!/^faire/.test(nx))P(n,'« FAIRE » manquant');if(/^pour\s+\w+\s+de\s+1\b/.test(s)&&Object.values(ty).some(v=>/^(tableau|chaine)/.test(v)))W(n,'les indices d’un tableau vont de 0 à N-1')}}
+if(!/^(algorithme|debut|fin)\b/.test(s)){const sn=new Set();(s.match(/[a-z_][a-z0-9_]*/g)||[]).forEach(v=>{if(KW(v)||(v in ty)||(v in MN)||sn.has(v)||/^(print|input|len|range|def|elif|else|while|for|if|import|return|append|sqrt|pow|math)$/.test(v))return;sn.add(v);U(v)})}
+if(/^retourner\b/.test(s)){if(!isM)P(n,'« Retourner » n’existe que dans une fonction');else if(hd.kind=='procedure')P(n,'une procédure ne retourne rien : pas de « Retourner »');else if(!/^retourner\s+\S/.test(s))P(n,'syntaxe : Retourner Résultat')}
+for(const m of s.matchAll(/\b([a-z_]\w*)\s*\(/g)){const md=MN[m[1]];if(!md||(m[1] in ty))continue;const a=PA(s,m.index+m[0].length),st=new RegExp('^'+m[1]+'\\s*\\(').test(s);
+const og=(x.a.split('\n')[k]||'').match(new RegExp('\\b'+m[1]+'\\s*\\(','i'));if(og&&md.raw&&og[0].replace(/\s*\($/,'')!==md.raw)W(n,'écris le nom du module exactement comme dans son en-tête : « '+md.raw+' » (et non « '+og[0].replace(/\s*\($/,'')+' »)');
+if(md.kind=='fonction'&&st)P(n,'le résultat d’une fonction doit être utilisé : Objet ← '+md.raw+'(…)');
+if(md.kind=='procedure'&&!st)P(n,'une procédure ne retourne pas de valeur : appelle-la comme une instruction  '+md.raw+'(…)');
+if(!md.ok)continue;
+if(a.length!==md.params.length){P(n,md.raw+'(…) : le nombre de paramètres ne correspond pas à l’en-tête : '+a.length+' argument(s) dans l’appel, '+md.params.length+' paramètre(s) dans l’en-tête');continue}
+const ats=a.map(e=>TI(e)),pts=md.params.map(p=>canon(nz(p.t)));let bad=0;
+md.params.forEach((p,j)=>{const v=a[j].trim(),at=ats[j];if(p.ref&&!/^[a-z_]\w*(\[[^\]]*\])?$/.test(v)){P(n,'le paramètre @'+p.n+' attend un objet (variable ou case de tableau), pas une valeur');bad++;return}
+if(!at)return;const pt=pts[j],okT=(at==pt)||(at=='chcar'&&(pt=='caractere'||pt=='chaine'))||(at=='caractere'&&pt=='chaine'&&!p.ref)||(!p.ref&&at=='entier'&&pt=='reel');
+if(!okT){bad++;P(n,md.raw+' : l’argument '+(j+1)+' est de type '+TLB(at)+' mais le paramètre « '+p.n+' » de l’en-tête est de type '+TLB(pt))}});
+if(bad&&ats.every(Boolean)){const A=ats.map(t=>t=='chcar'?'caractere':t).slice().sort().join(),B=pts.slice().sort().join();if(A===B)P(n,md.raw+' : les arguments sont du bon type mais pas dans le même ordre que l’en-tête '+md.raw+'('+md.params.map(p=>(p.ref?'@':'')+p.n+': '+p.t).join(', ')+')')}
+const nm=md.params.map(p=>p.n),an=a.map(e=>e.trim());if(!bad&&a.length>1&&an.every(v=>nm.includes(v))&&new Set(an).size===an.length&&an.some((v,j)=>v!==nm[j]))W(n,md.raw+' : les arguments portent les noms des paramètres de l’en-tête mais dans un autre ordre, vérifie l’ordre')}
+for(const m of s.matchAll(/\b([a-z_]\w*)\s*\[/g)){const v=m[1];if((v in ty)&&ty[v]&&!isA(ty[v])&&!/^chaine/.test(ty[v]))P(n,'« '+v+' » n’est pas un tableau (type '+ty[v]+') : '+v+'[…] est impossible')}
+if((g=s.match(/^([a-z_]\w*)\s*(?:<-|←)/))&&(g[1] in ty)&&isA(ty[g[1]]))P(n,'« '+g[1]+' » est un tableau : l’affectation se fait case par case ('+g[1]+'[i] ← …)');
+if((g=s.match(/^lire\s*\(\s*([a-z_]\w*)\s*\)/))&&(g[1] in ty)&&isA(ty[g[1]]))W(n,'Lire('+g[1]+') : un tableau se lit case par case, Lire('+g[1]+'[i])');
+if(/^ecrire(_nl)?\s*\(/.test(s))Object.keys(ty).filter(v=>isA(ty[v])).forEach(v=>{if(new RegExp('\\b'+v+'\\b(?!\\s*\\[)').test(s))W(n,'un tableau s’affiche case par case : '+v+'[i]')});
+if(/\b(sqrt|pow|math)\b|\*\*/.test(s))P(n,'« sqrt / pow / ** » n’existent pas en algorithme : utilise racinecarré(x) et x*x');
+for(const m of s.matchAll(/\b(racinecarre|abs|ent|arrondi|alea|ord|chr|long|pos|convch|estnum|valeur|sous_chaine|effacer|majus)\b(\s*\()?/g)){const nm=m[1];if(nm in ty)continue;if(!m[2]){P(n,'syntaxe d’une fonction prédéfinie : '+nm+'(…) avec parenthèses');continue}
+let d=1,j=m.index+m[0].length,a=[''];while(j<s.length){const c=s[j];if(c=='(')d++;else if(c==')'){d--;if(!d)break}if(c==','&&d==1)a.push('');else a[a.length-1]+=c;j++}
+const k=a.length===1&&!a[0].trim()?0:a.length;if(k!==FN[nm])P(n,nm+'(…) attend '+FN[nm]+' argument'+(FN[nm]>1?'s':''))}
+if(/^jusqu/.test(s)&&!/^jusqu['’]?\s*a\s+\S/.test(s))P(n,'syntaxe : Jusqu’à Condition');
+
+if((s.match(/\(/g)||[]).length!==(s.match(/\)/g)||[]).length)P(n,'parenthèses non équilibrées');
+if((g=s.match(/^([a-z_]\w*)\s*(?:<-|←)\s*.*racinecarre/))&&/^entier/.test(ty[g[1]]||''))P(n,'« '+g[1]+' » reçoit un résultat réel (racinecarré) : déclare-le de type Réel');
+if((g=s.match(/^selon\s+([a-z_]\w*)/))){const tt=ty[g[1]];if(tt&&!/^(entier|caractere)/.test(tt))P(n,'le sélecteur « '+g[1]+' » doit être de type Entier ou Caractère')}});
+const DX=isM?DML:DMG;Object.keys(DX).forEach(k=>{const m=MS.find(q=>q.name===k);if(!m){if(!isM)W(isM?'T.D.O. locales':'T.D.O. globales','« '+k+' » est déclaré comme '+(DX[k]=='fonction'?'fonction':'procédure')+' dans la T.D.O. mais aucun espace de travail n’existe pour ce module (Ajouter un module)')}else if(m.kind&&m.kind!==DX[k])P(isM?'T.D.O. locales':'T.D.O. globales','« '+k+' » est déclaré comme '+(DX[k]=='fonction'?'fonction':'procédure')+' dans la T.D.O. mais son espace de travail est '+(m.kind=='fonction'?'une fonction':'une procédure'))});
+if(isM&&hd.ok&&hd.kind=='fonction'){let e=T.length-1;while(e>=0&&!T[e])e--;let q=/^fin\b/.test(T[e]||'')?e-1:e;while(q>=0&&(!T[q]||T[q][0]=='/'))q--;
+const rets=T.map((t,k)=>/^retourner\b/.test(t)?k:-1).filter(k=>k>=0);
+if(!rets.length)P('—','« Retourner Résultat » manquant : une fonction se termine par Retourner juste avant FIN');
+else if(q<0||!/^retourner\s+\S/.test(T[q]))P(q<0?'—':q+1,'une fonction se termine par « Retourner Résultat » placé juste avant FIN');
+if(rets.length>1)W(rets[1]+1,'la convention place un seul « Retourner » à la fin de la fonction');
+if(q>=0&&/^retourner\s+\S/.test(T[q])){const ex=T[q].replace(/^retourner\s+/,'').replace(/\/\/.*$/,'').replace(/'[^']*'|"[^"]*"/g,z=>z.length==3?'"~"':'""'),tr=TI(ex),rt=canon(hd.rt);
+if(tr&&rt&&SIMPLE.test(hd.rt)&&!(tr==rt||(tr=='chcar'&&(rt=='caractere'||rt=='chaine'))||(tr=='caractere'&&rt=='chaine')||(tr=='entier'&&rt=='reel')))P(q+1,'Retourner : le résultat est de type '+TLB(tr)+' mais la fonction déclare le type '+TLB(rt))}}
+if(!isM){MS.forEach(m=>{if(!m.name)return;const re=new RegExp('\\b'+m.name+'\\s*\\(','i'),used=[X(pi).a].concat((X(pi).mods||[]).filter(id=>id!==m.id).map(id=>X(id).a)).some(src=>src.split('\n').some(l=>!/^\s*\/\//.test(l)&&re.test(l.replace(/\/\/.*$/,'').replace(/"[^"]*"/g,'""'))));if(!used)W('—','le module « '+(m.raw||m.name)+' » n’est jamais appelé')})}
+return F}
+const CS=i=>Math.max(0,20-2*CFA(i).filter(f=>f.p).length);
+
+function shortMsg(){const p=S.p,A=ID.map(an),avg=Math.round(A.reduce((t,a)=>t+a.sc,0)/2);return `Bonjour,\n\nL’étudiant(e) ${p.n} (${p.e} · WhatsApp ${p.w}) vient de terminer l’évaluation « Tableaux et modules » (3 Scientifique).\nTemps : ${fmt(S.t)} · Complétude : ${avg}% · Conformité : Ex1 ${CS(1)}/20, Ex2 ${CS(2)}/20.\nLe rapport complet est déposé automatiquement sur la page (si disponible) et peut être envoyé séparément.\n\nDate : ${new Date().toLocaleString('fr-FR')}`}
+function mailInfo(){const a=document.createElement('a');a.href='mailto:aymen.a@hotmail.com?subject='+encodeURIComponent('Évaluation terminée – '+S.p.n)+'&body='+encodeURIComponent(shortMsg());a.target='_blank';a.rel='noopener';a.click()}
+async function deposit(){const st=$('#shst');try{const cl=window.claude,db=cl&&await cl.use('db'),us=cl&&await cl.use('user'),id=us&&await us.id();
+if(!db||!id){st.textContent='Dépôt automatique indisponible dans cette vue : le message e-mail suffit.';return}
+await db.doc('submissions/'+id).set({name:S.p.n,email:S.p.e,whatsapp:S.p.w,time:fmt(S.t),at:new Date().toISOString(),scores:[CS(1),CS(2)],report:R});
+st.textContent='Rapport déposé automatiquement pour ton enseignant.'}catch(e){st.textContent='Dépôt automatique refusé (droits de la page) : utilise le message e-mail.'}}
+$('#mk').addEventListener('click',()=>{if($('#rp').hidden||!$('#auto').checked)return;mailInfo();deposit()});
+$('#inf').onclick=()=>{mailInfo();deposit()};
+</script></body></html>
